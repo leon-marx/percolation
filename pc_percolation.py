@@ -12,9 +12,12 @@ def pc_step(old_state, p, r):
     p: float in the range [0, 1], hyperparameter governing the transmission rate
     r: float in the range [0, 1], hyperparameter governing the annihilation rate
     """
-    for i in range(np.count_nonzero(old_state)):
+    C = np.count_nonzero(old_state)
+    if C == 0:
+        return old_state
+    for i in range(C):
         new_state = copy.deepcopy(old_state)
-        ind = np.random.choice([i for i, site in enumerate(old_state) if site == 1])  # choose random occupied site
+        ind = np.random.choice([j for j, site in enumerate(old_state) if site == 1])  # choose random occupied site
         v = np.random.uniform(0, 1)
         if v < 1 - p:  # generate
             new_state[ind-1] = 1
@@ -33,12 +36,18 @@ def pc_step(old_state, p, r):
                     if vvv < r:  # annihilation
                         new_state[ind-1] = 0
                         new_state[ind] = 0
+                else:
+                    new_state[ind-1] = 1
+                    new_state[ind] = 0
             else:  # right
                 if old_state[(ind+1) % len(old_state)] == 1:
                     vvv = np.random.uniform(0, 1)
                     if vvv < r:  # annihilation
                         new_state[(ind+1) % len(old_state)] = 0
                         new_state[ind] = 0
+                else:
+                    new_state[(ind+1) % len(old_state)] = 1
+                    new_state[ind] = 0
 
         old_state = new_state
     return new_state
@@ -95,14 +104,16 @@ def plot_pc(all_states):
     plt.show()
 
 
-L = 100
-p = 0.6447001
-r = 0.5
-# initial_state = np.random.randint(0, 2, L)  # (random)
-# initial_state = np.zeros(L)  # (single point)
-initial_state = np.ones(L)  # all active
-initial_state[int(L/2)] = 1
-N = L
 
-data = run_pc(initial_state, p, r, N)
-plot_pc(data)
+if __name__ == "__main__":
+    L = 100
+    p = 0.6447001
+    r = 0.5
+    # initial_state = np.random.randint(0, 2, L)  # (random)
+    initial_state = np.zeros(L)  # (single point)
+    # initial_state = np.ones(L)  # all active
+    initial_state[int(L/2)] = 1
+    N = L
+
+    data = run_pc(initial_state, p, r, N)
+    plot_pc(data)

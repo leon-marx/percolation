@@ -127,12 +127,14 @@ def plot_dp(all_states):
     plt.show()
 
 
-L = 100
-p = 0.6447001
-# initial_state = np.random.randint(0, 2, L)  # (random)
-initial_state = np.zeros(L)  # (single point)
-initial_state[int(L/2)] = 1
-N = L
 
-data = run_dp(initial_state, p, N)
-plot_dp(data)
+if __name__ == "__main__":
+    L = 100
+    p = 0.6447001
+    # initial_state = np.random.randint(0, 2, L)  # (random)
+    initial_state = np.zeros(L)  # (single point)
+    initial_state[int(L/2)] = 1
+    N = L
+
+    data = run_dp(initial_state, p, N)
+    plot_dp(data)
