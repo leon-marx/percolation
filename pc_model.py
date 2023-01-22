@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-import copy
 import matplotlib.patches as mpatches
 import numba
 
@@ -20,8 +19,8 @@ def pc_step(old_state, p, r):  # taken from Livi & Politi
     C = np.count_nonzero(old_state)
     if C == 0:
         return old_state
-    new_state = copy.deepcopy(old_state)
-    ind = np.random.choice([j for j, site in enumerate(old_state) if site == 1])  # choose random occupied site
+    new_state = old_state.copy()
+    ind = np.random.choice(np.array([j for j, site in enumerate(old_state) if site == 1]))  # choose random occupied site
     v = np.random.uniform(0, 1)
     if v < p:  # diffuse
         vv = np.random.uniform(0, 1)
@@ -81,7 +80,7 @@ def run_pc(initial_state, p, r, N):
     N: int, number of steps for which the simulation should run
     """
     print("Running the system...")
-    all_states = np.zeros(N+1, L, dtype=np.uint8)
+    all_states = np.zeros((N+1, L), dtype=np.uint8)
     all_states[0] = initial_state
     for i in tqdm(range(N)):
         state = pc_step(all_states[i], p, r)
@@ -125,8 +124,8 @@ if __name__ == "__main__":
     # initial_state[int(L/2)] = 1
     # initial_state = np.ones(L)  # all active
     N = L
-    C = 5
 
     data = run_pc(initial_state, p, r, N)
-    plot_pc(data)
+    # plot_pc(data)
     # print(data)
+    print(data[-1, -1])

@@ -1,8 +1,4 @@
-import numpy as np
+import matplotlib.pyplot as plt
 
-o = np.random.randint(0, 2, 20)
-
-ap = o + np.roll(o, 1, 0)
-print(ap[ap==2])
-print(ap)
-print(ap.astype(bool).astype(int))
+fig, axes = plt.subplots(ncols=4, nrows=4, figsize=(8, 8))
+print(axes[0])
